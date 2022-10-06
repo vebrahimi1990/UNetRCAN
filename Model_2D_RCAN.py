@@ -80,10 +80,10 @@ def RiR(inputs, num_RG, num_RCAB, filters, filters_cab, kernel, dropout):
     return x
 
 
-def make_RCAN(inputs, filters, filters_cab, num_RG, num_RCAB, kernel, en_out, de_out, dropout):
+def make_RCAN(inputs, filters, filters_cab, num_RG, num_RCAB, kernel, dropout):
     x = Conv2D(filters=filters, kernel_size=kernel, kernel_initializer=kinit(kernel, filters),
                bias_initializer=kinit_bias(kernel, filters), padding="same")(inputs)
-    x = RiR(x, num_RG, num_RCAB, filters, filters_cab, kernel, en_out, de_out, dropout)
+    x = RiR(x, num_RG, num_RCAB, filters, filters_cab, kernel, dropout)
     x = Dropout(dropout)(x)
     x = Conv2D(filters=1, kernel_size=1, kernel_initializer=kinit(kernel, filters),
                bias_initializer=kinit_bias(kernel, filters), padding="same")(x)
