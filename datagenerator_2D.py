@@ -45,6 +45,7 @@ def data_generator(GT_image_dr, lowSNR_image_dr, patch_size, n_patches, n_channe
 
     if add_noise:
         for i in range(len(x)):
+            # x[i] = np.random.poisson(y[i] / lp, size=y[i].shape)
             x[i] = np.random.poisson(y[i] / (lp + lp / 20 * (np.random.rand(1)[0] - 0.5)), size=y[i].shape)
 
     x[x < 0] = 0
