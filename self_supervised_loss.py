@@ -9,12 +9,6 @@ def norm_mse_loss(prediction, gt):
     return norm_mse
 
 
-def poisson_noise(prediction, lamb):
-    out = tf.random.poisson(shape=prediction.shape, lam=lamb * prediction)
-    return out
-
-
-def loss(lamb, prediction, noisy):
-    pred_noisy = poisson_noise(prediction, lamb)
-    value_loss = norm_mse_loss(pred_noisy, noisy)
+def loss(prediction, noisy):
+    value_loss = norm_mse_loss(prediction, noisy)
     return value_loss
