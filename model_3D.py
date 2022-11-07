@@ -112,6 +112,6 @@ def make_generator(inputs, filters, num_filters, filters_cab, num_RG, num_RCAB, 
     y = make_RCAN(inputs=y, filters=num_filters, filters_cab=filters_cab, num_RG=num_RG, num_RCAB=num_RCAB,
                   kernel=kernel_shape, dropout=dropout)
 
-    model = Model(inputs=[inputs], outputs={'one': x, 'two': y})
+    model = Model(inputs=[inputs], outputs=[x, y])
 
     return model

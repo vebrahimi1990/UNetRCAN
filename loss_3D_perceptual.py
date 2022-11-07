@@ -79,14 +79,14 @@ def perceptual_loss(prediction, gt):
 def generator_loss1(prediction, gt):
     norm_mse1 = norm_mse_loss(prediction, gt)
     percept_loss1 = perceptual_loss(prediction, gt)
-    gen_loss1 = 20*norm_mse1 + 0.01 * percept_loss1
+    gen_loss1 = 20*norm_mse1 + percept_loss1
     return gen_loss1
 
 
 def generator_loss2(prediction, gt):
     norm_mse2 = norm_mse_loss(prediction, gt)
     sim_loss2 = ssim_loss(prediction, gt)
-    gen_loss2 = 200*norm_mse2 + sim_loss2
+    gen_loss2 = 200*norm_mse2 + 20*sim_loss2
     return gen_loss2
 
 # def ch_loss(pred, gt):
