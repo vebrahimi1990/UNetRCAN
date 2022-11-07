@@ -79,7 +79,7 @@ def data_generator(gt, low, patch_size, n_patches, n_channel, threshold, ratio, 
     # lp = 0.5
     if add_noise:
         for i in range(len(x)):
-            x[i] = np.random.poisson(y[i] / lp, size=y[i].shape)
+            x[i] = np.random.poisson(((y[i])**2)/lp, size=y[i].shape)
 
     if augment:
         count = x.shape[0]
