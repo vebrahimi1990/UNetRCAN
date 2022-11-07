@@ -66,6 +66,7 @@ def data_generator(gt, low, patch_size, n_patches, n_channel, threshold, ratio, 
 
     count = 0
     # lp = 0.05
+
     for l in range(m):
         for j in range(n_patches):
             for k in range(n_patches):
