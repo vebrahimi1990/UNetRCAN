@@ -42,8 +42,8 @@ def stack_generator(GT_dr, low_dr, fr_start, fr_end):
     return crop_gt, crop_low
 
 
-def data_generator(gt, low, patch_size, n_patches, n_channel, threshold, ratio, fr_start, fr_end, augment=False,
-                   shuffle=False):
+def data_generator(gt, low, patch_size, n_patches, n_channel, threshold, ratio, fr_start, fr_end,lp, augment=False,
+                   shuffle=False, add_noise=False):
     m = gt.shape[0]
     # m = 100
     img_size = gt.shape[2]
@@ -75,12 +75,10 @@ def data_generator(gt, low, patch_size, n_patches, n_channel, threshold, ratio, 
 
     # x = 0.2 * y + np.random.poisson(y / lp, size=y.shape) + 5*np.random.normal(loc=0.5, scale=0.5, size=y.shape)
     # x[x < 0] = 0
-    lp = 0.5
-    for i in range(len(x)):
-        # x[i] = np.random.poisson(y[i]**0.5, size=y[i].shape)
-        # x[i] = y[i] + np.random.normal(loc=0.01 + 0.005 * (np.random.rand(1)[0] - 0.5),
-        #                                scale=0.3 + 0.01 * (np.random.rand(1)[0] - 0.5), size=y[i].shape)
-        x[i] = np.random.poisson(y[i] / lp, size=y[i].shape)
+    # lp = 0.5
+    if add_noise:
+        for i in range(len(x)):
+            x[i] = np.random.poisson(y[i] / lp, size=y[i].shape)
 
     if augment:
         count = x.shape[0]
