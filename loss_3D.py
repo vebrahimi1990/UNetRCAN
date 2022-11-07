@@ -97,12 +97,15 @@ def ch_loss(pred, gt):
 
 
 def edge_loss(pred, gt):
-    pred = tf.math.reduce_max(pred, axis=3)
-    gt = tf.math.reduce_max(gt, axis=3)
-    kernel = np.array([[0, 1, 0], [1, -4, 1], [0, 1, 0]])
-    kernel = kernel.reshape((3, 3, 1, 1))
-    pred = tf.nn.conv2d(pred, kernel, strides=[1, 1, 1, 1], padding='VALID')
-    gt = tf.nn.conv2d(gt, kernel, strides=[1, 1, 1, 1], padding='VALID')
+    # pred = tf.math.reduce_max(pred, axis=3)
+    # gt = tf.math.reduce_max(gt, axis=3)
+    pred = tf.transpose(pred, perm=[0, 3, 1, 2, 4])
+    gt = tf.transpose(gt, perm=[0, 3, 1, 2, 4])
+    kernel = np.array(
+        [[[0, 0, 0], [0, 2, 0], [0, 0, 0]], [[0, 2, 0], [2, -12, 2], [0, 2, 0]], [[0, 0, 0], [0, 2, 0], [0, 0, 0]]])
+    kernel = kernel.reshape((3, 3, 3, 1, 1))
+    pred = tf.nn.conv3d(pred, kernel, strides=[1, 1, 1, 1, 1], padding='VALID')
+    gt = tf.nn.conv3d(gt, kernel, strides=[1, 1, 1, 1, 1], padding='VALID')
     e_loss = ch_loss(pred, gt)
     return e_loss
 
@@ -110,5 +113,5 @@ def edge_loss(pred, gt):
 def generator_loss(prediction, gt):
     c_loss = ch_loss(prediction, gt)
     e_loss = edge_loss(prediction, gt)
-    gen_loss = c_loss
+    gen_loss = e_loss+e_loss
     return gen_loss
