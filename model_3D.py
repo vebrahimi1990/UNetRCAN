@@ -111,8 +111,6 @@ def make_generator(inputs, filters, num_filters, filters_cab, num_RG, num_RCAB, 
     y = concatenate([x, inputs])
     y = make_RCAN(inputs=y, filters=num_filters, filters_cab=filters_cab, num_RG=num_RG, num_RCAB=num_RCAB,
                   kernel=kernel_shape, dropout=dropout)
-    output = tf.keras.backend.concatenate([x, y])
-    # model = Model(inputs=[inputs], outputs=[x, y])
-    model = Model(inputs=[inputs], outputs=output)
+    model = Model(inputs=[inputs], outputs=[{'one': x, 'two': y}])
 
     return model
