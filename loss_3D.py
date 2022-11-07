@@ -113,5 +113,5 @@ def edge_loss(pred, gt):
 def generator_loss(prediction, gt):
     c_loss = ch_loss(prediction, gt)
     e_loss = edge_loss(prediction, gt)
-    gen_loss = e_loss+e_loss
+    gen_loss = e_loss+c_loss
     return gen_loss
