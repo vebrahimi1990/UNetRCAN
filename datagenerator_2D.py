@@ -23,7 +23,7 @@ def data_generator(GT_image_dr, lowSNR_image_dr, patch_size, n_patches, n_channe
     low = low.astype(np.float64)
     low = low / low.max()
     m = gt.shape[0]
-    # m = 16
+    # m = 5
     img_size = gt.shape[2]
 
     x = np.empty((m * n_patches * n_patches, patch_size, patch_size, 1), dtype=np.float64)
@@ -31,7 +31,8 @@ def data_generator(GT_image_dr, lowSNR_image_dr, patch_size, n_patches, n_channe
 
     rr = np.floor(np.linspace(0, img_size - patch_size, n_patches))
     rr = rr.astype(np.int32)
-    cc = rr
+    cc = np.floor(np.linspace(0, gt.shape[3] - patch_size, n_patches))
+    cc = cc.astype(np.int32)
     # for i in range(len(low)):
     #     low[i] = match_histograms(low[i], gt[i])
 
@@ -45,10 +46,13 @@ def data_generator(GT_image_dr, lowSNR_image_dr, patch_size, n_patches, n_channe
 
     if add_noise:
         for i in range(len(x)):
-            # x[i] = np.random.poisson(y[i] / lp, size=y[i].shape)
-            x[i] = np.random.poisson(y[i] / (lp + lp / 20 * (np.random.rand(1)[0] - 0.5)), size=y[i].shape)
+            # x[i] = np.random.poisson(y[i]**0.5, size=y[i].shape)
+            # x[i] = y[i] + np.random.normal(loc=0.01 + 0.005 * (np.random.rand(1)[0] - 0.5),
+            #                                scale=0.3 + 0.01 * (np.random.rand(1)[0] - 0.5), size=y[i].shape)
+            x[i] = np.random.poisson(y[i] / lp, size=y[i].shape)
 
     x[x < 0] = 0
+    # x = x/x.max()
     for i in range(len(x)):
         if x[i].max() > 0:
             x[i] = x[i] / x[i].max()

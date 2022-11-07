@@ -95,7 +95,7 @@ def make_generator(inputs, filters, num_filters, filters_cab, num_RG, num_RCAB, 
         skip_x.append(x)
         x = MaxPooling3D((2, 2, 2))(x)
 
-    x = conv_block(x, 2 * filters[-1], kernel_shape)
+    x = conv_block(x, 2 * filters[-1], kernel_shape, dropout)
     filters.reverse()
     skip_x.reverse()
 
@@ -104,7 +104,7 @@ def make_generator(inputs, filters, num_filters, filters_cab, num_RG, num_RCAB, 
         xs = skip_x[i]
         xs = CAB(xs, filters_cab=4, filters=f, kernel=3, dropout=dropout)
         x = concatenate([x, xs])
-        x = conv_block(x, f, kernel_shape)
+        x = conv_block(x, f, kernel_shape, dropout)
         # x = Dropout(dropout)(x)
     x = Conv3D(filters=1, kernel_size=1, kernel_initializer=kinit(3, filters[0]), bias_initializer=kinit(3, 1),
                padding="same")(x)

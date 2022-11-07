@@ -6,8 +6,8 @@ import numpy as np
 from readlif.reader import LifFile
 from tifffile import imsave
 
-path = r'D:\Projects\Denoising-STED\20220913-RPI\3D STED'
-file_name = r'D:\Projects\Denoising-STED\20220913-RPI\TOM20-fast 3D STED.lif'
+path = r'D:\Projects\Denoising-STED\20220913-RPI\photobleaching'
+file_name = r'D:\Projects\Denoising-STED\20220913-RPI\Tubulin-Histon-photobleaching-fast sted-2d.lif'
 
 os.mkdir(os.path.join(path, '', 'low SNR'))
 os.mkdir(os.path.join(path, '', 'GT'))
@@ -32,16 +32,16 @@ for i in range(new.num_images):
     img_avg = np.zeros((c, z, x, y))
     img_frame = np.zeros((c, z, x, y))
 
-    if t > 0:
+    if t > 6:
         for j in range(c):
             for k in range(z):
-                for m in range(1):
+                for m in range(3):
                     # m = m + 3
                     img_frame[j, k, :, :] = new_img.get_frame(z=k, t=m, c=j) + img_frame[j, k, :, :]
             img_frame[j, :, :, :] = img_frame[j, :, :, :] / img_frame[j, :, :, :].max()
         img_frame = np.uint16(img_frame * (2 ** 16 - 1))
-        # imsave(path_1frame + str(i) + '.tif', img_frame.squeeze(), imagej=True, metadata={'axes': 'CYX'})
-        imsave(path_1frame + str(i) + '.tif', img_frame.squeeze())
+        imsave(path_1frame + str(i) + '.tif', img_frame.squeeze(), imagej=True, metadata={'axes': 'CYX'})
+        # imsave(path_1frame + str(i) + '.tif', img_frame.squeeze())
     if t == 1:
         for j in range(c):
             for k in range(z):
@@ -49,5 +49,5 @@ for i in range(new.num_images):
                     img_avg[j, k, :, :] = new_img.get_frame(z=k, t=m, c=j) + img_avg[j, k, :, :]
             img_avg[j, :, :, :] = img_avg[j, :, :, :] / img_avg[j, :, :, :].max()
         img_avg = np.uint16(img_avg * (2 ** 16 - 1))
-        # imsave(path_avg + str(i) + '.tif', img_avg.squeeze(), imagej=True, metadata={'axes': 'CYX'})
-        imsave(path_avg + str(i) + '.tif', img_avg.squeeze())
+        imsave(path_avg + str(i) + '.tif', img_avg.squeeze(), imagej=True, metadata={'axes': 'CYX'})
+        # imsave(path_avg + str(i) + '.tif', img_avg.squeeze())

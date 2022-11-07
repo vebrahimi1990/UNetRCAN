@@ -14,6 +14,11 @@ def stack_generator(GT_dr, low_dr, fr_start, fr_end):
     # image_gt = np.moveaxis(image_gt, 1, 2)
     # image_low = np.moveaxis(image_low, 1, 2)
 
+    if len(image_gt.shape) == 3:
+        image_gt = np.reshape(image_gt, (image_gt.shape[0], 1, 1, image_gt.shape[1], image_gt.shape[2]))
+        image_low = np.reshape(image_low,
+                               (image_low.shape[0], 1, 1, image_low.shape[1], image_low.shape[2]))
+
     if len(image_gt.shape) == 4:
         image_gt = np.reshape(image_gt, (image_gt.shape[0], image_gt.shape[1], 1, image_gt.shape[2], image_gt.shape[3]))
         image_low = np.reshape(image_low,
@@ -22,8 +27,10 @@ def stack_generator(GT_dr, low_dr, fr_start, fr_end):
     print(image_gt.shape)
     for i in range(len(image_gt)):
         for j in range(image_gt.shape[2]):
-            image_gt[i, :, j, :, :] = image_gt[i, :, j, :, :] / image_gt[i, :, j, :, :].max()
-            image_low[i, :, j, :, :] = image_low[i, :, j, :, :] / image_low[i, :, j, :, :].max()
+            if image_gt[i, :, j, :, :].max() > 0:
+                image_gt[i, :, j, :, :] = image_gt[i, :, j, :, :] / image_gt[i, :, j, :, :].max()
+            if image_low[i, :, j, :, :].max() > 0:
+                image_low[i, :, j, :, :] = image_low[i, :, j, :, :] / image_low[i, :, j, :, :].max()
 
     crop_gt = image_gt[:, fr_start:fr_end, :, :, :]
     crop_low = image_low[:, fr_start:fr_end, :, :, :]
@@ -68,6 +75,12 @@ def data_generator(gt, low, patch_size, n_patches, n_channel, threshold, ratio, 
 
     # x = 0.2 * y + np.random.poisson(y / lp, size=y.shape) + 5*np.random.normal(loc=0.5, scale=0.5, size=y.shape)
     # x[x < 0] = 0
+    lp = 0.5
+    for i in range(len(x)):
+        # x[i] = np.random.poisson(y[i]**0.5, size=y[i].shape)
+        # x[i] = y[i] + np.random.normal(loc=0.01 + 0.005 * (np.random.rand(1)[0] - 0.5),
+        #                                scale=0.3 + 0.01 * (np.random.rand(1)[0] - 0.5), size=y[i].shape)
+        x[i] = np.random.poisson(y[i] / lp, size=y[i].shape)
 
     if augment:
         count = x.shape[0]
@@ -87,11 +100,11 @@ def data_generator(gt, low, patch_size, n_patches, n_channel, threshold, ratio, 
         xx = x
         yy = y
 
-    xx = xx / xx.max()
-    yy = yy / yy.max()
+    # xx = xx / xx.max()
+    # yy = yy / yy.max()
 
     norm_x = np.linalg.norm(np.max(xx, axis=3), axis=(1, 2))
-    ind_norm = np.where(norm_x > threshold)[0]
+    ind_norm = np.where(norm_x >= threshold)[0]
     print(len(ind_norm))
 
     xxx = np.empty((len(ind_norm), xx.shape[1], xx.shape[2], xx.shape[3], xx.shape[4]))
@@ -104,8 +117,10 @@ def data_generator(gt, low, patch_size, n_patches, n_channel, threshold, ratio, 
     #     yyy = yy
 
     for i in range(len(xxx)):
-        xxx[i] = xxx[i] / xxx[i].max()
-        yyy[i] = yyy[i] / yyy[i].max()
+        if xxx[i].max() > 0:
+            xxx[i] = xxx[i] / xxx[i].max()
+        if yyy[i].max() > 0:
+            yyy[i] = yyy[i] / yyy[i].max()
 
     aa = np.linspace(0, len(xxx) - 1, len(xxx))
     random.shuffle(aa)
