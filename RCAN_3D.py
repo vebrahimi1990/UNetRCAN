@@ -85,7 +85,6 @@ def make_RCAN(inputs, filters, filters_cab, num_RG, num_RCAB, kernel, dropout):
                bias_initializer=kinit(kernel, filters), padding="same")(x)
     return x
 
-
 def make_generator(inputs, filters, num_filters, filters_cab, num_RG, num_RCAB, kernel_shape, dropout):
     y = make_RCAN(inputs=inputs, filters=num_filters, filters_cab=filters_cab, num_RG=num_RG, num_RCAB=num_RCAB,
                   kernel=kernel_shape, dropout=dropout)
