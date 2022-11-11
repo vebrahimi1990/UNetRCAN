@@ -49,7 +49,7 @@ def data_generator(GT_image_dr, lowSNR_image_dr, patch_size, n_patches, n_channe
             # x[i] = np.random.poisson(y[i]**0.5, size=y[i].shape)
             # x[i] = y[i] + np.random.normal(loc=0.01 + 0.005 * (np.random.rand(1)[0] - 0.5),
             #                                scale=0.3 + 0.01 * (np.random.rand(1)[0] - 0.5), size=y[i].shape)
-            x[i] = np.random.poisson(y[i] / lp, size=y[i].shape)
+            x[i] = np.random.poisson(y[i] / (lp + lp / 10 * (np.random.rand(1)[0] - 0.5)), size=y[i].shape)
 
     x[x < 0] = 0
     # x = x/x.max()
@@ -77,6 +77,7 @@ def data_generator(GT_image_dr, lowSNR_image_dr, patch_size, n_patches, n_channe
         yy = y
 
     norm_x = np.linalg.norm(xx, axis=(1, 2))
+    norm_x = norm_x / norm_x.max()
     # norm_x = norm_x-15
     ind_norm = np.where(norm_x > threshold)[0]
     print(len(ind_norm))

@@ -6,8 +6,8 @@ import numpy as np
 from readlif.reader import LifFile
 from tifffile import imsave
 
-path = r'D:\Projects\Denoising-STED\20220913-RPI\photobleaching'
-file_name = r'D:\Projects\Denoising-STED\20220913-RPI\Tubulin-Histon-photobleaching-fast sted-2d.lif'
+path = r'D:\Projects\Denoising-STED\20220913-RPI\STED power dependence\tom20'
+file_name = r'D:\Projects\Denoising-STED\20220913-RPI\tom20-crossmod-0-10-20-40-80.lif'
 
 os.mkdir(os.path.join(path, '', 'low SNR'))
 os.mkdir(os.path.join(path, '', 'GT'))
@@ -49,5 +49,5 @@ for i in range(new.num_images):
                     img_avg[j, k, :, :] = new_img.get_frame(z=k, t=m, c=j) + img_avg[j, k, :, :]
             img_avg[j, :, :, :] = img_avg[j, :, :, :] / img_avg[j, :, :, :].max()
         img_avg = np.uint16(img_avg * (2 ** 16 - 1))
-        imsave(path_avg + str(i) + '.tif', img_avg.squeeze(), imagej=True, metadata={'axes': 'CYX'})
-        # imsave(path_avg + str(i) + '.tif', img_avg.squeeze())
+        # imsave(path_avg + str(i) + '.tif', img_avg.squeeze(), imagej=True, metadata={'axes': 'CYX'})
+        imsave(path_avg + str(i) + '.tif', img_avg.squeeze())

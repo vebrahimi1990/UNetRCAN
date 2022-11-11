@@ -104,8 +104,8 @@ def data_generator(gt, low, patch_size, n_patches, n_channel, threshold, ratio, 
         xx = x
         yy = y
 
-    # xx = xx / xx.max()
-    # yy = yy / yy.max()
+    xx = xx / xx.max()
+    yy = yy / yy.max()
 
     norm_x = np.linalg.norm(np.max(xx, axis=3), axis=(1, 2))
     ind_norm = np.where(norm_x >= threshold)[0]
@@ -120,11 +120,11 @@ def data_generator(gt, low, patch_size, n_patches, n_channel, threshold, ratio, 
     #     xxx = xx
     #     yyy = yy
 
-    for i in range(len(xxx)):
-        if xxx[i].max() > 0:
-            xxx[i] = xxx[i] / xxx[i].max()
-        if yyy[i].max() > 0:
-            yyy[i] = yyy[i] / yyy[i].max()
+    # for i in range(len(xxx)):
+    #     if xxx[i].max() > 0:
+    #         xxx[i] = xxx[i] / xxx[i].max()
+    #     if yyy[i].max() > 0:
+    #         yyy[i] = yyy[i] / yyy[i].max()
 
     aa = np.linspace(0, len(xxx) - 1, len(xxx))
     random.shuffle(aa)

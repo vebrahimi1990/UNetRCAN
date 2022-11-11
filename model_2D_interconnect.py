@@ -131,6 +131,7 @@ def make_generator(inputs, filters, num_filters, filters_cab, num_RG, num_RCAB, 
     #     skip_y[i] = Conv2D(filters=num_filters, kernel_size=1, kernel_initializer=kinit(1, num_filters))(skip_y[i])
     y = make_RCAN(inputs=y, filters=num_filters, filters_cab=filters_cab, num_RG=num_RG, num_RCAB=num_RCAB,
                   kernel=kernel_shape, en_out=skip_x, de_out=skip_y, dropout=dropout)
-    y = add([inputs, y])
+    # y = add([inputs, y])
+    # model = Model(inputs=[inputs], outputs=[y])
     model = Model(inputs=[inputs], outputs=[x, y])
     return model
